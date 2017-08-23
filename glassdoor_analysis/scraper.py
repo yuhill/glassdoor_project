@@ -3,6 +3,8 @@ import bs4
 import time
 from pprint import pprint
 
+from glassdoor_analysis.data_cleaner import normalize_salaries
+
 
 def download_website(page_url):
     s = requests.session()
@@ -48,10 +50,14 @@ def add_company_to_salary_info(titles_and_salaries, company_name):
 
 if __name__ == '__main__':
     list_urls = ["https://www.glassdoor.com/Salary/Boeing-Salaries-E102.htm",
-                 "https://www.glassdoor.com/Salary/Airbus-Salaries-E3059.htm"]
+                 "https://www.glassdoor.com/Salary/Airbus-Salaries-E3059.htm",
+                 "https://www.glassdoor.com/Salary/Airbus-Salaries-E3059_P2.htm",
+                 "https://www.glassdoor.com/Salary/Airbus-Salaries-E3059_P3.htm",
+                 "https://www.glassdoor.com/Salary/Airbus-Salaries-E3059_P4.htm",]
     companies = list()
     for page in list_urls:
         titles_and_salaries = find_titles_and_salaries(download_website(page))
+        titles_and_salaries = normalize_salaries(titles_and_salaries)
         company_name = page.split('-')[0].split('/')[-1]
         companies += add_company_to_salary_info(titles_and_salaries, company_name)
         time.sleep(1)
